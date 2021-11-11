@@ -25,6 +25,7 @@ async function run() {
         const droneCollection = database.collection("drones");
         const orderCollection = database.collection("order");
         const usersCollection = database.collection("users");
+        const reviewCollection = database.collection("review");
 
         // Post api
         app.post("/products", async (req, res) => {
@@ -152,6 +153,21 @@ async function run() {
                 isAdmin = true;
             }
             res.json({ admin: isAdmin });
+        });
+
+        // post api for review
+        app.post("/reviews", async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            // console.log(result);
+            res.json(result);
+        });
+
+        // get api for all data
+        app.get("/reviews", async (req, res) => {
+            const allReview = await reviewCollection.find({}).toArray();
+            // console.log(allReview);
+            res.send(allReview);
         });
     } finally {
         //   await client.close();
